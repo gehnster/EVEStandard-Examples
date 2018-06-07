@@ -37,20 +37,17 @@ namespace EVEStandard.ASPNETCoreSample
                 });
 
             // Register your application at: https://developers.eveonline.com/applications to obtain client ID and secret key and add them to user secrets
-            // by right-clicking the solution and selecting Manage User Secrets
-
-            // URL for the callback
-            // IMPORTANT: Replace with correct port
-            var callbackUrl = "https://localhost:44314/Auth/Callback";
+            // by right-clicking the solution and selecting Manage User Secrets.
+            // Also, modify the callback URL in appsettings.json to match with your environment.
 
             // Initialize the client
             var esiClient = new EVEStandardAPI(
-                    "EVEStandard",              // User agent
-                    DataSource.Tranquility,     // Server [Tranquility/Singularity]
-                    TimeSpan.FromSeconds(30),   // Timeout
-                    callbackUrl,                // SSO callback URL
-                    Configuration["ClientId"],                   // Client ID
-                    Configuration["SecretKey"]);                 // Secret Key
+                    "EVEStandard",                  // User agent
+                    DataSource.Tranquility,         // Server [Tranquility/Singularity]
+                    TimeSpan.FromSeconds(30),       // Timeout
+                    Configuration["SSOCallbackUrl"],
+                    Configuration["ClientId"],
+                    Configuration["SecretKey"]);
 
             // Register with DI container
             services.AddSingleton<EVEStandardAPI>(esiClient);
