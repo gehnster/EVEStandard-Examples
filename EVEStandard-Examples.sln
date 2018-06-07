@@ -6,6 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EVEStandard.ASPNETCoreSample", "EVEStandard.ASPNETCoreSample\EVEStandard.ASPNETCoreSample.csproj", "{06D1B010-F488-45EC-912C-6D4DC09B229D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B68FA701-3D72-4619-A0F5-FA074EB68451}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE.MD = LICENSE.MD
+		README.MD = README.MD
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
