@@ -1,4 +1,4 @@
-﻿@using System.Security.Claims
+﻿@model EVEStandard.ASPNETCoreSample.Models.SecurePageViewModel
 
 @{
     ViewData["Title"] = "Secure";
@@ -10,6 +10,6 @@
     This is a secure page.
 </p>
 <p>
-    You are logged in as: @User.Identity.Name
+    You are logged in as: @Model.CharacterName and you are a member of: @Model.CorporationName.
 </p>
 
