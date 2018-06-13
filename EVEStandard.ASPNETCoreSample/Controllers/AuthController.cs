@@ -27,7 +27,7 @@ namespace EVEStandard.ASPNETCoreSample.Controllers
             // Scopes are required for API calls but not for authentication, dummy scope is inserted to workaround an issue in the library
             var scopes = new List<string>()
             {
-                String.Empty
+                "esi-location.read_location.v1"
             };
 
             string state;
@@ -65,7 +65,7 @@ namespace EVEStandard.ASPNETCoreSample.Controllers
             var accessToken = await esiClient.SSO.VerifyAuthorizationAsync(authorization);
             var character = await esiClient.SSO.GetCharacterDetailsAsync(accessToken.AccessToken);
 
-            await SignInAsync(character.CharacterID, character.CharacterName);
+            await SignInAsync(accessToken, character);
                        
             if (Guid.TryParse(state, out Guid stateGuid))
             {
@@ -78,12 +78,21 @@ namespace EVEStandard.ASPNETCoreSample.Controllers
             }            
         }
 
-        private async Task SignInAsync(int characterId, string characterName)
+        private async Task SignInAsync(AccessTokenDetails accessToken, CharacterDetails character)
         {
+            if (accessToken == null)
+                throw new ArgumentNullException(nameof(accessToken));
+            if (character == null)
+                throw new ArgumentNullException(nameof(character));
+
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, characterId.ToString()),
-                new Claim(ClaimTypes.Name, characterName)
+                new Claim(ClaimTypes.NameIdentifier, character.CharacterID.ToString()),
+                new Claim(ClaimTypes.Name, character.CharacterName),
+                new Claim("AccessToken", accessToken.AccessToken),
+                new Claim("RefreshToken", accessToken.RefreshToken ?? ""),
+                new Claim("AccessTokenExpiry", accessToken.ExpiresUtc.ToString()),
+                new Claim("Scopes", character.Scopes)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
