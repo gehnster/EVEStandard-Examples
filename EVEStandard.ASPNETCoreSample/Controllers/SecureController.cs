@@ -38,7 +38,7 @@ namespace EVEStandard.ASPNETCoreSample.Controllers
             };
 
             var locationInfo = await esiClient.Location.GetCharacterLocationV1Async(auth);
-            var location = await esiClient.Universe.GetSolarSystemInfoV3Async(locationInfo.Model.SolarSystemId);
+            var location = await esiClient.Universe.GetSolarSystemInfoV4Async(locationInfo.Model.SolarSystemId);
 
             var model = new SecurePageViewModel
             {

@@ -87,7 +87,7 @@ namespace EVEStandard.ASPNETCoreSample.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, character.CharacterID.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, character.CharacterId.ToString()),
                 new Claim(ClaimTypes.Name, character.CharacterName),
                 new Claim("AccessToken", accessToken.AccessToken),
                 new Claim("RefreshToken", accessToken.RefreshToken ?? ""),
