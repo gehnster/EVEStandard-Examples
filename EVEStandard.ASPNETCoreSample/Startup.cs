@@ -26,7 +26,10 @@ namespace EVEStandard.ASPNETCoreSample
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                // This is set to false to allow the SSOState cookie to be persisted in the user's session cookie as\
+                // required by the auth security check. If you need to set this value to true you should refer to 
+                // https://docs.microsoft.com/en-us/aspnet/core/security/gdpr for additiona guidance.
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
