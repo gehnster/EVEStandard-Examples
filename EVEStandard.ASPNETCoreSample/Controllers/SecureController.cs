@@ -22,8 +22,8 @@ namespace EVEStandard.ASPNETCoreSample.Controllers
         public async Task<IActionResult> Index()
         {
             var characterId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var characterInfo = await esiClient.Character.GetCharacterPublicInfoV4Async(characterId);
-            var corporationInfo = await esiClient.Corporation.GetCorporationInfoV4Async((int)characterInfo.Model.CorporationId);
+            var characterInfo = await esiClient.Character.GetCharacterPublicInfoV5Async(characterId);
+            var corporationInfo = await esiClient.Corporation.GetCorporationInfoV5Async((int)characterInfo.Model.CorporationId);
 
             var auth = new AuthDTO
             {

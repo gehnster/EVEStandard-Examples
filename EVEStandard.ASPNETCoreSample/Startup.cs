@@ -48,13 +48,14 @@ namespace EVEStandard.ASPNETCoreSample
             var esiClient = new EVEStandardAPI(
                     "EVEStandard",                  // User agent
                     DataSource.Tranquility,         // Server [Tranquility/Singularity]
-                    TimeSpan.FromSeconds(30),       // Timeout
-                    Configuration["SSOCallbackUrl"],
-                    Configuration["ClientId"],
-                    Configuration["SecretKey"]);
+                    TimeSpan.FromSeconds(30));       // Timeout
 
             // Register with DI container
             services.AddSingleton<EVEStandardAPI>(esiClient);
+
+            // Register EVEStandard SSO if you want to use it, you don't have to use EVEStandard SSO with EVEStandard.
+            var sso = new SSOv2(DataSource.Tranquility, Configuration["SSOCallbackUrl"], Configuration["ClientId"], Configuration["SecretKey"]);
+            services.AddSingleton<SSOv2>(sso);
 
             // Session is required 
             services.AddSession();

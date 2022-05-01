@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EVEStandard.ASPNETCoreSample", "EVEStandard.ASPNETCoreSample\EVEStandard.ASPNETCoreSample.csproj", "{06D1B010-F488-45EC-912C-6D4DC09B229D}"
 EndProject
