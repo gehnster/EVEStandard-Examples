@@ -7,19 +7,22 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace EVEStandard.ASPNETCoreSample.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly EVEStandardAPI esiClient;
+        private readonly EVEStandardAPI _esiClient;
+        private readonly SSOv2 _sso;
 
         private static string SSOStateKey = "SSOState";
 
-        public AuthController(EVEStandardAPI esiClient)
+        public AuthController(EVEStandardAPI esiClient, SSOv2 sso)
         {
-            this.esiClient = esiClient;
+            _esiClient = esiClient;
+            _sso = sso;
         }
 
         public IActionResult Login(string returnUrl = null)
@@ -43,8 +46,8 @@ namespace EVEStandard.ASPNETCoreSample.Controllers
 
             HttpContext.Session.SetString(SSOStateKey, state);
 
-            var authorization = esiClient.SSO.AuthorizeToEVEUri(scopes, state);
-            return Redirect(authorization.SignInURI);
+            var authorization = _sso.AuthorizeToSSOBasicAuthUri(state, scopes);
+            return Redirect(authorization);
         }
 
         public async Task<IActionResult> Logout()
@@ -55,15 +58,14 @@ namespace EVEStandard.ASPNETCoreSample.Controllers
 
         public async Task<IActionResult> Callback(string code, string state)
         {
-            var authorization = new Authorization
+            var expectedState = HttpContext.Session.GetString(SSOStateKey);
+            if(expectedState != state)
             {
-                AuthorizationCode = code,
-                ExpectedState = HttpContext.Session.GetString(SSOStateKey),
-                ReturnedState = state
-            };
+                var fakeLogging = "You probably have a security issue if these two items don't match!";
+            }
 
-            var accessToken = await esiClient.SSO.VerifyAuthorizationAsync(authorization);
-            var character = await esiClient.SSO.GetCharacterDetailsAsync(accessToken.AccessToken);
+            var accessToken = await _sso.VerifyAuthorizationForBasicAuthAsync(code);
+            var character = await _sso.GetCharacterDetailsAsync(accessToken.AccessToken);
 
             await SignInAsync(accessToken, character);
                        
@@ -92,7 +94,7 @@ namespace EVEStandard.ASPNETCoreSample.Controllers
                 new Claim("AccessToken", accessToken.AccessToken),
                 new Claim("RefreshToken", accessToken.RefreshToken ?? ""),
                 new Claim("AccessTokenExpiry", accessToken.ExpiresUtc.ToString()),
-                new Claim("Scopes", character.Scopes)
+                new Claim("Scopes", JsonSerializer.Serialize(character.Scopes))
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
